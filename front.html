@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CAPS</title>
+    <style>
+        body {
+            margin: 0;
+        }
+        #stream {
+            width: 100vw;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Server (frontend)</h1>
+<video src="" id="stream"></video>
+
+
+<script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
+<script>
+  const peer = new Peer('server', {
+    host: 'localhost',
+    port: 9000,
+    path: '/peerjs/myapp'
+  });
+
+
+  const conn = peer.connect("client");
+
+  peer.on('call', function(call) {
+      call.answer();
+      call.on('stream', function(stream) {
+          console.log(stream)
+          const video = document.querySelector('video')
+          video.srcObject = stream
+          video.onloadedmetadata = (e) => video.play()
+      });
+  });
+
+</script>
+</body>
+</html>
